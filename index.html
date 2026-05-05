@@ -1,199 +1,619 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiplication Visualizer - ครูเจม</title>
-    <style>
-        body {
-            font-family: 'Sarabun', sans-serif;
-            background-color: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
-        }
-        h2 {
-            color: #2980b9;
-            margin-bottom: 20px;
-        }
-        .input-group {
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        input[type="number"] {
-            width: 80px;
-            padding: 8px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            text-align: right;
-        }
-        button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 20px;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        .math-board {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 24px;
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: right;
-            letter-spacing: 5px;
-            min-height: 200px;
-        }
-        .line {
-            border-bottom: 2px solid white;
-            margin: 5px 0;
-        }
-        .hidden {
-            display: none;
-        }
-        .highlight {
-            color: #e74c3c;
-            font-weight: bold;
-            animation: pulse 1s infinite;
-        }
-        .fade-in {
-            animation: fadeIn 1s forwards;
-            opacity: 0;
-        }
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-        .explanation {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #7f8c8d;
-            text-align: left;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌟 คณิตคิดสนุก – คูณ & หาร</title>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600;700&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #00c6ff;
+    --sun: #ffdd00;
+    --grass: #2ecc71;
+    --coral: #ff6b6b;
+    --purple: #a29bfe;
+    --orange: #fd9644;
+    --bg: #fff9f0;
+    --card: #ffffff;
+    --text: #2d3436;
+    --shadow: 0 8px 32px rgba(0,0,0,0.10);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Mitr', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ffd93d 50%, #6bcb77 100%);
+    text-align: center;
+    padding: 32px 20px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.12'%3E%3Ccircle cx='30' cy='30' r='12'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  header h1 { font-size: 2.6rem; font-weight: 700; color: #fff; text-shadow: 0 3px 10px rgba(0,0,0,0.18); position: relative; }
+  header p { font-size: 1.1rem; color: rgba(255,255,255,0.92); margin-top: 6px; position: relative; }
+
+  .stars { display: flex; justify-content: center; gap: 8px; margin-top: 10px; position: relative; }
+  .star { font-size: 1.6rem; animation: starPop 1s ease infinite alternate; }
+  .star:nth-child(2) { animation-delay: 0.2s; }
+  .star:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes starPop { from { transform: scale(1); } to { transform: scale(1.3) rotate(15deg); } }
+
+  /* ===== NAV TABS ===== */
+  nav {
+    display: flex; justify-content: center; gap: 12px;
+    padding: 20px 20px 0;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 10px 26px; border-radius: 50px; border: none; cursor: pointer;
+    font-family: 'Mitr', sans-serif; font-size: 1rem; font-weight: 600;
+    transition: all 0.25s; box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+    background: #e0e0e0; color: #777;
+  }
+  .tab-btn.active { background: var(--coral); color: #fff; box-shadow: 0 6px 20px rgba(255,107,107,0.35); transform: translateY(-2px); }
+  .tab-btn:not(.active):hover { background: #f0f0f0; transform: translateY(-1px); }
+
+  /* ===== SECTIONS ===== */
+  .section { display: none; padding: 24px 16px 40px; max-width: 860px; margin: 0 auto; }
+  .section.active { display: block; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: none; } }
+
+  /* ===== CONCEPT CARD ===== */
+  .concept-card {
+    background: var(--card); border-radius: 20px; padding: 28px;
+    box-shadow: var(--shadow); margin-bottom: 24px;
+    border-left: 6px solid var(--coral);
+  }
+  .concept-card h2 { font-size: 1.5rem; color: var(--coral); margin-bottom: 14px; }
+
+  /* ===== ANIMATION AREA ===== */
+  .anim-wrapper {
+    background: #fff; border-radius: 20px; padding: 24px;
+    box-shadow: var(--shadow); margin-bottom: 24px;
+    text-align: center;
+  }
+  .anim-title { font-size: 1.1rem; font-weight: 600; color: #555; margin-bottom: 16px; }
+  .anim-expression { font-size: 2.4rem; font-weight: 700; color: var(--text); margin: 10px 0 18px; letter-spacing: 2px; }
+  .anim-expression span { display: inline-block; }
+  .anim-expression .num { color: var(--coral); }
+  .anim-expression .op  { color: var(--purple); margin: 0 8px; }
+  .anim-expression .eq  { color: #555; margin: 0 8px; }
+  .anim-expression .ans { color: var(--grass); }
+
+  .grid-visual {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center; align-items: center;
+    min-height: 80px; margin: 16px 0;
+  }
+  .group-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .group-label { font-size: 0.78rem; color: #888; font-weight: 600; }
+  .group-row { display: flex; gap: 6px; }
+
+  .dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; font-weight: 700;
+    opacity: 0; transform: scale(0);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .dot.show { opacity: 1; transform: scale(1); }
+
+  .dot-colors { background: #ffb3c1; color: #c0392b; }
+  .dot-colors:nth-child(2n) { background: #a8e6cf; color: #27ae60; }
+  .dot-colors:nth-child(3n) { background: #ffe082; color: #f39c12; }
+  .dot-colors:nth-child(4n) { background: #b3d9ff; color: #2980b9; }
+  .dot-colors:nth-child(5n) { background: #d7b8f3; color: #8e44ad; }
+
+  .group-sep { font-size: 1.8rem; color: #ccc; align-self: center; }
+
+  .anim-controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+  .anim-btn {
+    padding: 9px 22px; border-radius: 50px; border: none; cursor: pointer;
+    font-family: 'Mitr', sans-serif; font-size: 0.95rem; font-weight: 600;
+    transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+  }
+  .btn-play  { background: var(--grass); color: #fff; }
+  .btn-reset { background: #dfe6e9; color: #636e72; }
+  .btn-play:hover  { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(46,204,113,0.35); }
+  .btn-reset:hover { transform: translateY(-2px); }
+
+  .step-text { font-size: 1rem; color: #636e72; margin-top: 10px; min-height: 28px; transition: opacity 0.3s; }
+
+  /* ===== PRACTICE SECTION ===== */
+  .quiz-header { text-align: center; margin-bottom: 20px; }
+  .quiz-header h2 { font-size: 1.6rem; color: var(--purple); }
+  .quiz-header p { color: #888; font-size: 0.95rem; margin-top: 4px; }
+
+  .score-bar {
+    display: flex; align-items: center; gap: 12px;
+    background: #fff; border-radius: 50px; padding: 10px 20px;
+    box-shadow: var(--shadow); max-width: 360px; margin: 0 auto 24px;
+  }
+  .score-label { font-weight: 600; color: #555; }
+  .score-count { font-size: 1.3rem; font-weight: 700; color: var(--coral); margin-left: auto; }
+
+  .quiz-cards { display: flex; flex-direction: column; gap: 18px; }
+  .quiz-card {
+    background: var(--card); border-radius: 18px; padding: 22px 24px;
+    box-shadow: var(--shadow); transition: transform 0.2s;
+    border: 3px solid transparent;
+  }
+  .quiz-card:hover { transform: translateY(-2px); }
+  .quiz-card.correct { border-color: var(--grass); background: #f0fff4; }
+  .quiz-card.wrong   { border-color: var(--coral); background: #fff5f5; }
+
+  .quiz-q { font-size: 1.5rem; font-weight: 700; margin-bottom: 16px; color: var(--text); }
+  .quiz-q .op-sym { color: var(--purple); }
+
+  .choices { display: flex; gap: 10px; flex-wrap: wrap; }
+  .choice-btn {
+    padding: 10px 22px; border-radius: 50px; border: 2px solid #e0e0e0;
+    background: #fff; cursor: pointer; font-family: 'Mitr', sans-serif;
+    font-size: 1.1rem; font-weight: 600; transition: all 0.2s; color: var(--text);
+  }
+  .choice-btn:hover:not(:disabled) { border-color: var(--purple); color: var(--purple); transform: translateY(-2px); }
+  .choice-btn.correct-ans { background: var(--grass); color: #fff; border-color: var(--grass); }
+  .choice-btn.wrong-ans   { background: var(--coral); color: #fff; border-color: var(--coral); }
+  .choice-btn:disabled { cursor: not-allowed; opacity: 0.8; }
+
+  .result-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 0.97rem; }
+  .result-icon { font-size: 1.4rem; }
+  .explain { color: #555; }
+
+  .quiz-restart-wrap { text-align: center; margin-top: 30px; }
+  .restart-btn {
+    padding: 12px 36px; border-radius: 50px; border: none; cursor: pointer;
+    background: linear-gradient(135deg, var(--coral), var(--orange));
+    color: #fff; font-family: 'Mitr', sans-serif; font-size: 1.1rem; font-weight: 700;
+    box-shadow: 0 6px 20px rgba(255,107,107,0.3); transition: all 0.25s;
+  }
+  .restart-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(255,107,107,0.4); }
+
+  /* ===== TIPS CARD ===== */
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 8px; }
+  .tip-card {
+    background: var(--card); border-radius: 16px; padding: 20px;
+    box-shadow: var(--shadow); text-align: center;
+  }
+  .tip-icon { font-size: 2.4rem; margin-bottom: 10px; }
+  .tip-card h3 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .tip-card p { font-size: 0.88rem; color: #636e72; line-height: 1.6; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 520px) {
+    header h1 { font-size: 1.9rem; }
+    .anim-expression { font-size: 1.8rem; }
+    .quiz-q { font-size: 1.2rem; }
+  }
+
+  /* bouncy result badge */
+  .final-badge {
+    background: linear-gradient(135deg, var(--sun), var(--orange));
+    border-radius: 20px; padding: 28px; text-align: center;
+    margin-top: 28px; box-shadow: var(--shadow); display: none;
+  }
+  .final-badge.show { display: block; animation: fadeIn 0.5s ease; }
+  .final-badge .big { font-size: 3rem; }
+  .final-badge h3 { font-size: 1.5rem; font-weight: 700; color: #fff; margin: 8px 0 4px; }
+  .final-badge p { color: rgba(255,255,255,0.9); }
+</style>
 </head>
 <body>
 
-<div class="container">
-    <h2>เครื่องจักรการคูณ ⚙️</h2>
-    
-    <div class="input-group">
-        <label>ตัวตั้ง (สูงสุด 3 หลัก):</label>
-        <input type="number" id="num1" max="999" value="23">
-    </div>
-    <div class="input-group">
-        <label>ตัวคูณ (สูงสุด 2 หลัก):</label>
-        <input type="number" id="num2" max="99" value="14">
-    </div>
-    
-    <button onclick="startAnimation()">เริ่มคำนวณ</button>
+<header>
+  <h1>🔢 คณิตคิดสนุก</h1>
+  <p>เรียนรู้ <strong>การคูณ</strong> และ <strong>การหาร</strong> แบบเห็นภาพชัดเจน</p>
+  <div class="stars">
+    <span class="star">⭐</span><span class="star">🌟</span><span class="star">⭐</span>
+  </div>
+</header>
 
-    <div class="math-board" id="board">
-        รอการคำนวณ...
-    </div>
+<nav>
+  <button class="tab-btn active" onclick="showTab('mul-learn')">✖️ เรียนรู้การคูณ</button>
+  <button class="tab-btn" onclick="showTab('div-learn')">➗ เรียนรู้การหาร</button>
+  <button class="tab-btn" onclick="showTab('quiz')">📝 แบบฝึกหัด 10 ข้อ</button>
+  <button class="tab-btn" onclick="showTab('tips')">💡 เทคนิคจำง่าย</button>
+</nav>
 
-    <div class="explanation" id="explainBox"></div>
-</div>
+<!-- ===== MULTIPLICATION LEARN ===== -->
+<section id="mul-learn" class="section active">
+  <div class="concept-card">
+    <h2>✖️ การคูณคืออะไร?</h2>
+    <p style="line-height:1.9;font-size:1.05rem;">
+      การคูณ คือ <strong>การบวกซ้ำๆ</strong> ของตัวเลขเดิม<br>
+      ตัวอย่าง: <strong>3 × 4</strong> หมายถึง บวก 3 เข้าไป 4 ครั้ง → 3+3+3+3 = <strong style="color:var(--grass)">12</strong><br>
+      หรือคิดว่า มี <strong>4 กลุ่ม</strong> กลุ่มละ <strong>3 ชิ้น</strong> รวมกันได้ <strong style="color:var(--grass)">12 ชิ้น</strong>
+    </p>
+  </div>
+
+  <div class="anim-wrapper">
+    <div class="anim-title">🎨 ลองเล่นดู – เลือกการคูณที่อยากดู</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;">
+      <button class="anim-btn btn-play" onclick="setupMul(2,5)">2 × 5</button>
+      <button class="anim-btn btn-play" onclick="setupMul(3,4)">3 × 4</button>
+      <button class="anim-btn btn-play" onclick="setupMul(4,3)">4 × 3</button>
+      <button class="anim-btn btn-play" onclick="setupMul(5,6)">5 × 6</button>
+      <button class="anim-btn btn-play" onclick="setupMul(6,7)">6 × 7</button>
+    </div>
+    <div class="anim-expression" id="mul-expr">
+      <span class="num" id="mul-a">3</span>
+      <span class="op">×</span>
+      <span class="num" id="mul-b">4</span>
+      <span class="eq">=</span>
+      <span class="ans" id="mul-ans">?</span>
+    </div>
+    <div class="grid-visual" id="mul-grid"></div>
+    <div class="step-text" id="mul-step">กดปุ่ม ▶ เล่น เพื่อดูภาพประกอบ</div>
+    <div class="anim-controls">
+      <button class="anim-btn btn-play" id="mul-play-btn" onclick="playMul()">▶ เล่น</button>
+      <button class="anim-btn btn-reset" onclick="resetMul()">↺ รีเซต</button>
+    </div>
+  </div>
+
+  <div class="concept-card" style="border-color:var(--purple)">
+    <h2 style="color:var(--purple)">📌 จุดสำคัญ</h2>
+    <ul style="line-height:2;padding-left:20px;font-size:1rem;">
+      <li><strong>3 × 4</strong> และ <strong>4 × 3</strong> ได้คำตอบเท่ากัน (สลับที่กันได้)</li>
+      <li>คูณด้วย <strong>1</strong> ได้ตัวเดิม เช่น 7 × 1 = 7</li>
+      <li>คูณด้วย <strong>0</strong> ได้ 0 เสมอ เช่น 9 × 0 = 0</li>
+      <li>คูณด้วย <strong>10</strong> แค่เติม 0 ข้างหลัง เช่น 6 × 10 = 60</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== DIVISION LEARN ===== -->
+<section id="div-learn" class="section">
+  <div class="concept-card" style="border-color:var(--sky)">
+    <h2 style="color:#0984e3">➗ การหารคืออะไร?</h2>
+    <p style="line-height:1.9;font-size:1.05rem;">
+      การหาร คือ <strong>การแบ่งออกเป็นกลุ่มเท่าๆ กัน</strong><br>
+      ตัวอย่าง: <strong>12 ÷ 4</strong> หมายถึง แบ่ง 12 ออกเป็น 4 กลุ่มเท่าๆ กัน → ได้กลุ่มละ <strong style="color:var(--grass)">3</strong><br>
+      การหาร คือ "ย้อนกลับ" ของการคูณ: ถ้า 3 × 4 = 12 แล้ว 12 ÷ 4 = 3
+    </p>
+  </div>
+
+  <div class="anim-wrapper">
+    <div class="anim-title">🎨 ลองเล่นดู – เลือกการหารที่อยากดู</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;">
+      <button class="anim-btn btn-play" onclick="setupDiv(10,2)">10 ÷ 2</button>
+      <button class="anim-btn btn-play" onclick="setupDiv(12,3)">12 ÷ 3</button>
+      <button class="anim-btn btn-play" onclick="setupDiv(20,4)">20 ÷ 4</button>
+      <button class="anim-btn btn-play" onclick="setupDiv(15,5)">15 ÷ 5</button>
+      <button class="anim-btn btn-play" onclick="setupDiv(24,6)">24 ÷ 6</button>
+    </div>
+    <div class="anim-expression" id="div-expr">
+      <span class="num" id="div-a">12</span>
+      <span class="op">÷</span>
+      <span class="num" id="div-b">4</span>
+      <span class="eq">=</span>
+      <span class="ans" id="div-ans">?</span>
+    </div>
+    <div class="grid-visual" id="div-grid"></div>
+    <div class="step-text" id="div-step">กดปุ่ม ▶ เล่น เพื่อดูภาพประกอบ</div>
+    <div class="anim-controls">
+      <button class="anim-btn btn-play" id="div-play-btn" onclick="playDiv()">▶ เล่น</button>
+      <button class="anim-btn btn-reset" onclick="resetDiv()">↺ รีเซต</button>
+    </div>
+  </div>
+
+  <div class="concept-card" style="border-color:#0984e3">
+    <h2 style="color:#0984e3">📌 จุดสำคัญ</h2>
+    <ul style="line-height:2;padding-left:20px;font-size:1rem;">
+      <li>ตัวตั้ง ÷ ตัวหาร = ผลหาร &nbsp;→&nbsp; เช่น <strong>15 ÷ 3 = 5</strong></li>
+      <li>ตรวจสอบ: ผลหาร × ตัวหาร = ตัวตั้ง &nbsp;→&nbsp; 5 × 3 = 15 ✓</li>
+      <li>ตัวเลขใดหารตัวเองได้ = 1 เช่น 7 ÷ 7 = 1</li>
+      <li>0 หารตัวเลขใดก็ได้ = 0 เช่น 0 ÷ 5 = 0</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== QUIZ SECTION ===== -->
+<section id="quiz" class="section">
+  <div class="quiz-header">
+    <h2>📝 แบบฝึกหัด 10 ข้อ</h2>
+    <p>เลือกคำตอบที่ถูกต้อง – มีเฉลยและคำอธิบายทันที</p>
+  </div>
+  <div class="score-bar">
+    <span class="score-label">คะแนนของฉัน:</span>
+    <span class="score-count" id="score-display">0 / 10</span>
+  </div>
+  <div class="quiz-cards" id="quiz-container"></div>
+  <div class="final-badge" id="final-badge">
+    <div class="big" id="badge-emoji">🏆</div>
+    <h3 id="badge-title">เก่งมาก!</h3>
+    <p id="badge-msg"></p>
+  </div>
+  <div class="quiz-restart-wrap">
+    <button class="restart-btn" onclick="buildQuiz()">🔄 เริ่มใหม่</button>
+  </div>
+</section>
+
+<!-- ===== TIPS ===== -->
+<section id="tips" class="section">
+  <div class="concept-card" style="border-color:var(--orange)">
+    <h2 style="color:var(--orange)">💡 เทคนิคจำง่าย</h2>
+    <p style="line-height:1.8;font-size:1.05rem;">เคล็ดลับเหล่านี้จะช่วยให้คุณท่องสูตรคูณและทำโจทย์หารได้เร็วขึ้น!</p>
+  </div>
+  <div class="tips-grid">
+    <div class="tip-card">
+      <div class="tip-icon">🖐</div>
+      <h3>คูณ 5 ง่ายมาก!</h3>
+      <p>คูณด้วย 5 = หารด้วย 2 แล้วคูณ 10<br>เช่น 8×5 → 8÷2=4 → 4×10 = <strong>40</strong></p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">✌️</div>
+      <h3>คูณ 2 = บวกตัวเอง</h3>
+      <p>7×2 = 7+7 = 14<br>คิดว่า "double" แล้วจำง่ายขึ้น</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🔟</div>
+      <h3>คูณ 9 นิ้วมือ</h3>
+      <p>กางมือ 10 นิ้ว เช่น 9×3 → พับนิ้วที่ 3 จากซ้าย → เหลือซ้าย 2 ขวา 7 = <strong>27</strong></p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🔁</div>
+      <h3>หารด้วยการคูณ</h3>
+      <p>ไม่รู้ 24÷8 = ?<br>ถามตัวเองว่า 8×? = 24 → <strong>3</strong></p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">📐</div>
+      <h3>คูณ 11 (ไม่เกิน 9)</h3>
+      <p>นำตัวเลขเขียนซ้ำ<br>เช่น 11×7 = <strong>77</strong>, 11×5 = <strong>55</strong></p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🧱</div>
+      <h3>แยกตัวเลขใหญ่</h3>
+      <p>7×8 ยาก? → 7×(5+3) = 7×5 + 7×3 = 35+21 = <strong>56</strong></p>
+    </div>
+  </div>
+
+  <div class="concept-card" style="border-color:var(--grass);margin-top:24px">
+    <h2 style="color:var(--grass)">🌈 สูตรคูณที่ควรจำ</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:14px;font-size:0.95rem;line-height:2">
+      <div><strong>× 2:</strong> 2,4,6,8,10,12,14,16,18</div>
+      <div><strong>× 3:</strong> 3,6,9,12,15,18,21,24,27</div>
+      <div><strong>× 4:</strong> 4,8,12,16,20,24,28,32,36</div>
+      <div><strong>× 5:</strong> 5,10,15,20,25,30,35,40,45</div>
+      <div><strong>× 6:</strong> 6,12,18,24,30,36,42,48,54</div>
+      <div><strong>× 7:</strong> 7,14,21,28,35,42,49,56,63</div>
+      <div><strong>× 8:</strong> 8,16,24,32,40,48,56,64,72</div>
+      <div><strong>× 9:</strong> 9,18,27,36,45,54,63,72,81</div>
+    </div>
+  </div>
+</section>
 
 <script>
-    async function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+// ===== TAB SWITCHING =====
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ===== MULTIPLICATION ANIMATION =====
+const EMOJIS = ['🍎','🍊','⭐','💎','🎈','🌸','🎵','🍭','🌈','🎯'];
+let mulA = 3, mulB = 4, mulPlaying = false, mulTimer = null;
+
+function setupMul(a, b) { mulA = a; mulB = b; resetMul(); }
+
+function resetMul() {
+  clearTimeout(mulTimer); mulPlaying = false;
+  document.getElementById('mul-a').textContent = mulA;
+  document.getElementById('mul-b').textContent = mulB;
+  document.getElementById('mul-ans').textContent = '?';
+  document.getElementById('mul-step').textContent = 'กดปุ่ม ▶ เล่น เพื่อดูภาพประกอบ';
+  document.getElementById('mul-play-btn').disabled = false;
+  const grid = document.getElementById('mul-grid');
+  grid.innerHTML = '';
+  // pre-build groups hidden
+  for (let g = 0; g < mulB; g++) {
+    const wrap = document.createElement('div');
+    wrap.className = 'group-wrap';
+    if (g > 0) { const sep = document.createElement('span'); sep.className = 'group-sep'; sep.textContent = '+'; wrap.before?.(sep); }
+    const label = document.createElement('div');
+    label.className = 'group-label';
+    label.textContent = `กลุ่ม ${g+1}`;
+    wrap.appendChild(label);
+    const row = document.createElement('div');
+    row.className = 'group-row';
+    for (let i = 0; i < mulA; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot dot-colors';
+      d.textContent = EMOJIS[(g * mulA + i) % EMOJIS.length];
+      row.appendChild(d);
     }
+    wrap.appendChild(row);
+    if (g > 0) { const sep2 = document.createElement('span'); sep2.className = 'group-sep'; sep2.textContent = '+'; grid.appendChild(sep2); }
+    grid.appendChild(wrap);
+  }
+}
 
-    async function startAnimation() {
-        const num1 = parseInt(document.getElementById('num1').value);
-        const num2 = parseInt(document.getElementById('num2').value);
-        const board = document.getElementById('board');
-        const explainBox = document.getElementById('explainBox');
+function playMul() {
+  if (mulPlaying) return;
+  mulPlaying = true;
+  document.getElementById('mul-play-btn').disabled = true;
+  const dots = document.querySelectorAll('#mul-grid .dot');
+  let shown = 0;
+  const total = mulA * mulB;
+  document.getElementById('mul-step').textContent = `กำลังนับ... `;
 
-        if (isNaN(num1) || isNaN(num2)) {
-            board.innerHTML = "โปรดใส่ตัวเลขให้ครบครับ!";
-            return;
-        }
-
-        const num2Str = num2.toString();
-        const num1Str = num1.toString();
-        
-        // Reset board
-        board.innerHTML = '';
-        explainBox.innerHTML = '';
-
-        // Step 1: Show Multiplicand and Multiplier
-        let html = `
-            <div class="fade-in">${num1Str.padStart(6, '&nbsp;')}</div>
-            <div class="fade-in">x${num2Str.padStart(5, '&nbsp;')}</div>
-            <div class="line fade-in"></div>
-        `;
-        board.innerHTML = html;
-        explainBox.innerHTML = "<b>ขั้นตอนที่ 1:</b> ตั้งหลักให้ตรงกัน";
-        await sleep(1500);
-
-        let partialProducts = [];
-        
-        // Loop through multiplier digits from right to left
-        for (let i = num2Str.length - 1; i >= 0; i--) {
-            const digit = parseInt(num2Str[i]);
-            const position = num2Str.length - 1 - i; // 0 for units, 1 for tens
-            
-            const product = num1 * digit;
-            // Pad with zeros based on position (e.g., *10 for tens digit)
-            const displayProduct = product + '0'.repeat(position);
-            partialProducts.push(parseInt(displayProduct));
-
-            // Step 2 & 3: Show Partial Products
-            let stepHtml = `<div class="fade-in">`;
-            
-            if (position === 1) {
-                 explainBox.innerHTML = "<b>ขั้นตอนที่ 3:</b> นำหลักสิบไปคูณ <br><span style='color:#e74c3c;'>อย่าลืมเติม 0 ที่หลักหน่วยเสมอ! เพราะเรากำลังคูณด้วยหลักสิบ</span>";
-                 stepHtml += `${displayProduct.padStart(6, '&nbsp;').replace(/0$/, '<span class="highlight">0</span>')}`;
-            } else {
-                 explainBox.innerHTML = `<b>ขั้นตอนที่ 2:</b> นำหลักหน่วย (${digit}) ไปคูณตัวตั้งทั้งหมด`;
-                 stepHtml += `${displayProduct.padStart(6, '&nbsp;')}`;
-            }
-            
-            stepHtml += `</div>`;
-            board.innerHTML += stepHtml;
-            await sleep(2000);
-        }
-
-        // Step 4: Show Final Sum (if more than 1 partial product)
-        if (partialProducts.length > 1) {
-            board.innerHTML += `<div class="line fade-in"></div>`;
-            const finalSum = partialProducts.reduce((a, b) => a + b, 0);
-            
-            explainBox.innerHTML = "<b>ขั้นตอนสุดท้าย:</b> นำผลคูณย่อยมาบวกกัน";
-            board.innerHTML += `<div class="fade-in highlight">${finalSum.toString().padStart(6, '&nbsp;')}</div>`;
-            board.innerHTML += `<div class="line fade-in" style="border-bottom-style: double;"></div>`;
-        }
+  function showNext() {
+    if (shown < total) {
+      dots[shown].classList.add('show');
+      shown++;
+      document.getElementById('mul-step').textContent = `นับไปแล้ว ${shown} ชิ้น จากทั้งหมด ${total} ชิ้น`;
+      mulTimer = setTimeout(showNext, Math.max(80, 350 - total * 10));
+    } else {
+      document.getElementById('mul-ans').textContent = total;
+      document.getElementById('mul-step').textContent = `✅ ${mulA} กลุ่ม × กลุ่มละ ${mulB}... เดี๋ยวก่อน! ${mulB} กลุ่ม กลุ่มละ ${mulA} → รวม ${total}`;
+      mulPlaying = false;
     }
+  }
+  showNext();
+}
+resetMul();
+
+// ===== DIVISION ANIMATION =====
+let divA = 12, divB = 4, divPlaying = false, divTimer = null;
+
+function setupDiv(a, b) { divA = a; divB = b; resetDiv(); }
+
+function resetDiv() {
+  clearTimeout(divTimer); divPlaying = false;
+  document.getElementById('div-a').textContent = divA;
+  document.getElementById('div-b').textContent = divB;
+  document.getElementById('div-ans').textContent = '?';
+  document.getElementById('div-step').textContent = 'กดปุ่ม ▶ เล่น เพื่อดูภาพประกอบ';
+  document.getElementById('div-play-btn').disabled = false;
+  const grid = document.getElementById('div-grid');
+  grid.innerHTML = '';
+  const perGroup = divA / divB;
+  for (let g = 0; g < divB; g++) {
+    if (g > 0) { const sep = document.createElement('span'); sep.className = 'group-sep'; sep.textContent = '|'; grid.appendChild(sep); }
+    const wrap = document.createElement('div');
+    wrap.className = 'group-wrap';
+    const label = document.createElement('div'); label.className = 'group-label'; label.textContent = `กลุ่ม ${g+1}`;
+    wrap.appendChild(label);
+    const row = document.createElement('div'); row.className = 'group-row';
+    for (let i = 0; i < perGroup; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot dot-colors';
+      d.textContent = EMOJIS[(g + i * 3) % EMOJIS.length];
+      row.appendChild(d);
+    }
+    wrap.appendChild(row);
+    grid.appendChild(wrap);
+  }
+}
+
+function playDiv() {
+  if (divPlaying) return;
+  divPlaying = true;
+  document.getElementById('div-play-btn').disabled = true;
+  const perGroup = divA / divB;
+  const dots = document.querySelectorAll('#div-grid .dot');
+  let shown = 0;
+  document.getElementById('div-step').textContent = `แบ่ง ${divA} ออกเป็น ${divB} กลุ่ม...`;
+
+  function showNext() {
+    if (shown < divA) {
+      dots[shown].classList.add('show');
+      shown++;
+      const groupDone = Math.floor(shown / perGroup);
+      document.getElementById('div-step').textContent = `วาง ${shown} ชิ้น → แต่ละกลุ่มได้ ${Math.ceil(shown/divB)} ชิ้น`;
+      divTimer = setTimeout(showNext, Math.max(80, 350 - divA * 8));
+    } else {
+      document.getElementById('div-ans').textContent = perGroup;
+      document.getElementById('div-step').textContent = `✅ ${divA} ÷ ${divB} = ${perGroup} → แต่ละกลุ่มได้ ${perGroup} ชิ้น`;
+      divPlaying = false;
+    }
+  }
+  showNext();
+}
+resetDiv();
+
+// ===== QUIZ =====
+const allQuestions = [
+  { q:'3 × 6', ans:18, choices:[15,18,21,24], type:'mul', explain:'3 × 6 = บวก 3 เข้าไป 6 ครั้ง → 3+3+3+3+3+3 = 18' },
+  { q:'7 × 8', ans:56, choices:[48,54,56,63], type:'mul', explain:'7 × 8 = 56 (จำไว้: 5,6,7,8 → 56=7×8)' },
+  { q:'9 × 4', ans:36, choices:[27,32,36,40], type:'mul', explain:'9 × 4 = 36 หรือคิด 10×4=40 แล้วลบ 4 = 36' },
+  { q:'5 × 7', ans:35, choices:[30,35,40,45], type:'mul', explain:'5 × 7 = 35 (คูณ 5 ลงท้าย 0 หรือ 5 เสมอ)' },
+  { q:'6 × 6', ans:36, choices:[30,36,42,48], type:'mul', explain:'6 × 6 = 36 (สี่เหลี่ยมจัตุรัสที่ดี!)' },
+  { q:'24 ÷ 4', ans:6, choices:[4,5,6,8], type:'div', explain:'24 ÷ 4 = 6 เพราะ 6 × 4 = 24' },
+  { q:'36 ÷ 9', ans:4, choices:[3,4,5,6], type:'div', explain:'36 ÷ 9 = 4 เพราะ 4 × 9 = 36' },
+  { q:'45 ÷ 5', ans:9, choices:[7,8,9,10], type:'div', explain:'45 ÷ 5 = 9 เพราะ 9 × 5 = 45' },
+  { q:'56 ÷ 7', ans:8, choices:[6,7,8,9], type:'div', explain:'56 ÷ 7 = 8 เพราะ 8 × 7 = 56' },
+  { q:'63 ÷ 9', ans:7, choices:[6,7,8,9], type:'div', explain:'63 ÷ 9 = 7 เพราะ 7 × 9 = 63' },
+];
+
+let score = 0;
+function buildQuiz() {
+  score = 0;
+  document.getElementById('score-display').textContent = '0 / 10';
+  document.getElementById('final-badge').classList.remove('show');
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+
+  // shuffle choices per question but keep deterministic order
+  allQuestions.forEach((q, idx) => {
+    const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+    card.id = `qcard-${idx}`;
+
+    const sym = q.type === 'mul' ? '×' : '÷';
+    const parts = q.q.split(/[×÷]/);
+    card.innerHTML = `
+      <div class="quiz-q">ข้อ ${idx+1}: &nbsp; ${parts[0].trim()} <span class="op-sym">${sym}</span> ${parts[1].trim()} = ?</div>
+      <div class="choices" id="choices-${idx}">
+        ${shuffled.map(c => `<button class="choice-btn" onclick="checkAns(${idx},${c},${q.ans})">${c}</button>`).join('')}
+      </div>
+      <div class="result-row" id="result-${idx}" style="display:none">
+        <span class="result-icon" id="ricon-${idx}"></span>
+        <span class="explain" id="rtext-${idx}"></span>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function checkAns(idx, chosen, correct) {
+  const q = allQuestions[idx];
+  const card = document.getElementById(`qcard-${idx}`);
+  const btns = document.querySelectorAll(`#choices-${idx} .choice-btn`);
+  btns.forEach(b => { b.disabled = true; if (parseInt(b.textContent) === correct) b.classList.add('correct-ans'); });
+
+  const resultRow = document.getElementById(`result-${idx}`);
+  const icon = document.getElementById(`ricon-${idx}`);
+  const text = document.getElementById(`rtext-${idx}`);
+
+  if (chosen === correct) {
+    score++;
+    card.classList.add('correct');
+    icon.textContent = '✅';
+    text.innerHTML = `<strong style="color:var(--grass)">ถูกต้อง!</strong> ${q.explain}`;
+  } else {
+    card.classList.add('wrong');
+    document.querySelectorAll(`#choices-${idx} .choice-btn`).forEach(b => { if (parseInt(b.textContent) === chosen) b.classList.add('wrong-ans'); });
+    icon.textContent = '❌';
+    text.innerHTML = `<strong style="color:var(--coral)">ยังไม่ถูก</strong> คำตอบที่ถูกคือ <strong>${correct}</strong> — ${q.explain}`;
+  }
+
+  resultRow.style.display = 'flex';
+  document.getElementById('score-display').textContent = `${score} / 10`;
+
+  // check all done
+  const allDone = [...document.querySelectorAll('.quiz-card')].every(c => c.classList.contains('correct') || c.classList.contains('wrong'));
+  if (allDone) showBadge();
+}
+
+function showBadge() {
+  const badge = document.getElementById('final-badge');
+  const emoji = document.getElementById('badge-emoji');
+  const title = document.getElementById('badge-title');
+  const msg = document.getElementById('badge-msg');
+  if (score === 10) { emoji.textContent='🏆'; title.textContent='เก่งมากเลย! เยี่ยมมาก!'; msg.textContent='คุณตอบถูกทุกข้อ! สุดยอดนักคณิตศาสตร์!'; }
+  else if (score >= 7) { emoji.textContent='⭐'; title.textContent='ดีมากๆ!'; msg.textContent=`ได้ ${score}/10 คะแนน — ฝึกอีกนิดแล้วจะเก่งมากเลย`; }
+  else if (score >= 5) { emoji.textContent='💪'; title.textContent='พยายามต่อไปนะ!'; msg.textContent=`ได้ ${score}/10 คะแนน — ลองทบทวนข้อที่ผิดแล้วเริ่มใหม่`; }
+  else { emoji.textContent='📚'; title.textContent='อย่าเพิ่งท้อ!'; msg.textContent=`ได้ ${score}/10 คะแนน — กลับไปดูบทเรียนอีกครั้งแล้วลองใหม่นะ`; }
+  badge.classList.add('show');
+  badge.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+buildQuiz();
 </script>
-
 </body>
 </html>
