@@ -1,167 +1,199 @@
-html_content = """
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เอกสารการเรียน: พื้นฐานการคูณสู่มัธยมต้น</title>
+    <title>Multiplication Visualizer - ครูเจม</title>
     <style>
         body {
             font-family: 'Sarabun', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
             background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
         }
         .container {
             background: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #2c3e50;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             text-align: center;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 10px;
+            width: 100%;
+            max-width: 400px;
         }
         h2 {
             color: #2980b9;
-            border-left: 5px solid #2980b9;
-            padding-left: 10px;
-            margin-top: 30px;
+            margin-bottom: 20px;
         }
-        .example-box {
-            background-color: #e8f4fd;
-            border-radius: 5px;
-            padding: 20px;
-            margin: 15px 0;
-            border-left: 5px solid #3498db;
+        .input-group {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .step {
-            margin-bottom: 10px;
-            padding-left: 20px;
-        }
-        .math-block {
-            font-family: 'Courier New', Courier, monospace;
-            background: #eee;
-            padding: 10px;
+        input[type="number"] {
+            width: 80px;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
             border-radius: 4px;
-            display: inline-block;
-            margin: 10px 0;
+            text-align: right;
         }
-        .exercise-list {
-            background: #fff;
-            padding: 20px;
-            border: 1px solid #ddd;
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
             border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 20px;
+            transition: background 0.3s;
         }
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 0.9em;
-            color: #7f8c8d;
+        button:hover {
+            background-color: #2980b9;
+        }
+        .math-board {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 24px;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: right;
+            letter-spacing: 5px;
+            min-height: 200px;
+        }
+        .line {
+            border-bottom: 2px solid white;
+            margin: 5px 0;
+        }
+        .hidden {
+            display: none;
         }
         .highlight {
             color: #e74c3c;
             font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+        .fade-in {
+            animation: fadeIn 1s forwards;
+            opacity: 0;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .explanation {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #7f8c8d;
+            text-align: left;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>บทเรียน: พื้นฐานการคูณสู่มัธยมต้น</h1>
-        <p><strong>วิชา:</strong> คณิตศาสตร์ | <strong>ผู้สอน:</strong> ครูเจม</p>
 
-        <h2>1. แนวคิดพื้นฐานการคูณ</h2>
-        <p>การคูณคือการ <strong>"บวกเพิ่มครั้งละเท่าๆ กัน"</strong> เป็นพื้นฐานสำคัญในการคำนวณที่ซับซ้อนขึ้นในระดับ ม.ต้น เช่น การหาพื้นที่, ร้อยละ, และพีชคณิต</p>
-
-        <h2>2. ตัวอย่างการแสดงวิธีทำอย่างละเอียด</h2>
-
-        <div class="example-box">
-            <h3>ตัวอย่างที่ 1: การคูณเลข 2 หลัก กับ 1 หลัก (แบบมีตัวทด)</h3>
-            <p><strong>โจทย์: 47 × 6 = ?</strong></p>
-            <div class="step">
-                <strong>ขั้นตอนที่ 1: ตั้งหลักให้ตรงกัน</strong><br>
-                วาง 47 เป็นตัวตั้ง และ 6 เป็นตัวคูณในหลักหน่วย
-            </div>
-            <div class="step">
-                <strong>ขั้นตอนที่ 2: คูณหลักหน่วย</strong><br>
-                นำ 6 ไปคูณกับ 7 (6 × 7 = 42)<br>
-                - เขียนเลข <span class="highlight">2</span> ไว้ที่ผลลัพธ์หลักหน่วย<br>
-                - นำเลข <span class="highlight">4</span> ไปทดไว้บนหลักสิบ
-            </div>
-            <div class="step">
-                <strong>ขั้นตอนที่ 3: คูณหลักสิบ</strong><br>
-                นำ 6 ไปคูณกับ 4 (6 × 4 = 24)<br>
-                - นำผลคูณ 24 ไปบวกกับตัวทด 4 (24 + 4 = <span class="highlight">28</span>)<br>
-                - เขียนเลข 28 ลงหน้าเลข 2
-            </div>
-            <p><strong>ตอบ: 282</strong></p>
-        </div>
-
-        <div class="example-box">
-            <h3>ตัวอย่างที่ 2: การคูณเลข 2 หลัก กับ 2 หลัก (การคูณสองชั้น)</h3>
-            <p><strong>โจทย์: 23 × 14 = ?</strong></p>
-            <div class="step">
-                <strong>ชั้นที่ 1: ใช้หลักหน่วยของตัวคูณ (เลข 4)</strong><br>
-                - 4 × 3 = 12 (ใส่ 2 ทด 1)<br>
-                - 4 × 2 = 8 บวกตัวทด 1 เป็น 9<br>
-                - ผลคูณชั้นที่หนึ่งคือ <span class="highlight">92</span>
-            </div>
-            <div class="step">
-                <strong>ชั้นที่ 2: ใช้หลักสิบของตัวคูณ (เลข 1)</strong><br>
-                - <span class="highlight">สำคัญ!</span> เติม <strong>0</strong> ที่หลักหน่วยรอก่อน (เพราะคือการคูณด้วย 10)<br>
-                - 1 × 3 = 3<br>
-                - 1 × 2 = 2<br>
-                - ผลคูณชั้นที่สองคือ <span class="highlight">230</span>
-            </div>
-            <div class="step">
-                <strong>ขั้นตอนสุดท้าย: รวมผลคูณ</strong><br>
-                - 92 + 230 = 322
-            </div>
-            <p><strong>ตอบ: 322</strong></p>
-        </div>
-
-        <h2>3. แบบฝึกหัดทบทวน (10 ข้อ)</h2>
-        <div class="exercise-list">
-            <ol>
-                <li>12 × 5 = ?</li>
-                <li>25 × 4 = ?</li>
-                <li>15 × 10 = ?</li>
-                <li>123 × 3 = ?</li>
-                <li>45 × 12 = ?</li>
-                <li>88 × 11 = ?</li>
-                <li>250 × 2 = ?</li>
-                <li>15 × 15 = ?</li>
-                <li>102 × 5 = ?</li>
-                <li>1,000 × 7 = ?</li>
-            </ol>
-        </div>
-
-        <h2>4. เฉลยและแนวคิด</h2>
-        <ul>
-            <li><strong>ข้อ 1: 60</strong> (10×5=50, 2×5=10)</li>
-            <li><strong>ข้อ 2: 100</strong> (เบิ้ลสองเท่าของ 25 คือ 50 แล้วเบิ้ลอีกทีเป็น 100)</li>
-            <li><strong>ข้อ 3: 150</strong> (เติม 0 ต่อท้าย)</li>
-            <li><strong>ข้อ 4: 369</strong> (คูณทีละหลักจากหน่วยไปร้อย)</li>
-            <li><strong>ข้อ 5: 540</strong> (45×10=450 บวกกับ 45×2=90)</li>
-            <li><strong>ข้อ 6: 968</strong> (88×10=880 บวกกับ 88×1=88)</li>
-            <li><strong>ข้อ 7: 500</strong> (25×2=50 แล้วเติม 0)</li>
-            <li><strong>ข้อ 8: 225</strong> (15×10=150 บวกกับ 15×5=75)</li>
-            <li><strong>ข้อ 9: 510</strong> (100×5=500 บวกกับ 2×5=10)</li>
-            <li><strong>ข้อ 10: 7,000</strong> (เติม 0 สามตัว)</li>
-        </ul>
-
-        <div class="footer">
-            <p>จัดทำโดย ครูเจม - หลักสูตรเร่งรัดเพื่อปูพื้นฐานสู่ ม.ปลาย</p>
-        </div>
+<div class="container">
+    <h2>เครื่องจักรการคูณ ⚙️</h2>
+    
+    <div class="input-group">
+        <label>ตัวตั้ง (สูงสุด 3 หลัก):</label>
+        <input type="number" id="num1" max="999" value="23">
     </div>
+    <div class="input-group">
+        <label>ตัวคูณ (สูงสุด 2 หลัก):</label>
+        <input type="number" id="num2" max="99" value="14">
+    </div>
+    
+    <button onclick="startAnimation()">เริ่มคำนวณ</button>
+
+    <div class="math-board" id="board">
+        รอการคำนวณ...
+    </div>
+
+    <div class="explanation" id="explainBox"></div>
+</div>
+
+<script>
+    async function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function startAnimation() {
+        const num1 = parseInt(document.getElementById('num1').value);
+        const num2 = parseInt(document.getElementById('num2').value);
+        const board = document.getElementById('board');
+        const explainBox = document.getElementById('explainBox');
+
+        if (isNaN(num1) || isNaN(num2)) {
+            board.innerHTML = "โปรดใส่ตัวเลขให้ครบครับ!";
+            return;
+        }
+
+        const num2Str = num2.toString();
+        const num1Str = num1.toString();
+        
+        // Reset board
+        board.innerHTML = '';
+        explainBox.innerHTML = '';
+
+        // Step 1: Show Multiplicand and Multiplier
+        let html = `
+            <div class="fade-in">${num1Str.padStart(6, '&nbsp;')}</div>
+            <div class="fade-in">x${num2Str.padStart(5, '&nbsp;')}</div>
+            <div class="line fade-in"></div>
+        `;
+        board.innerHTML = html;
+        explainBox.innerHTML = "<b>ขั้นตอนที่ 1:</b> ตั้งหลักให้ตรงกัน";
+        await sleep(1500);
+
+        let partialProducts = [];
+        
+        // Loop through multiplier digits from right to left
+        for (let i = num2Str.length - 1; i >= 0; i--) {
+            const digit = parseInt(num2Str[i]);
+            const position = num2Str.length - 1 - i; // 0 for units, 1 for tens
+            
+            const product = num1 * digit;
+            // Pad with zeros based on position (e.g., *10 for tens digit)
+            const displayProduct = product + '0'.repeat(position);
+            partialProducts.push(parseInt(displayProduct));
+
+            // Step 2 & 3: Show Partial Products
+            let stepHtml = `<div class="fade-in">`;
+            
+            if (position === 1) {
+                 explainBox.innerHTML = "<b>ขั้นตอนที่ 3:</b> นำหลักสิบไปคูณ <br><span style='color:#e74c3c;'>อย่าลืมเติม 0 ที่หลักหน่วยเสมอ! เพราะเรากำลังคูณด้วยหลักสิบ</span>";
+                 stepHtml += `${displayProduct.padStart(6, '&nbsp;').replace(/0$/, '<span class="highlight">0</span>')}`;
+            } else {
+                 explainBox.innerHTML = `<b>ขั้นตอนที่ 2:</b> นำหลักหน่วย (${digit}) ไปคูณตัวตั้งทั้งหมด`;
+                 stepHtml += `${displayProduct.padStart(6, '&nbsp;')}`;
+            }
+            
+            stepHtml += `</div>`;
+            board.innerHTML += stepHtml;
+            await sleep(2000);
+        }
+
+        // Step 4: Show Final Sum (if more than 1 partial product)
+        if (partialProducts.length > 1) {
+            board.innerHTML += `<div class="line fade-in"></div>`;
+            const finalSum = partialProducts.reduce((a, b) => a + b, 0);
+            
+            explainBox.innerHTML = "<b>ขั้นตอนสุดท้าย:</b> นำผลคูณย่อยมาบวกกัน";
+            board.innerHTML += `<div class="fade-in highlight">${finalSum.toString().padStart(6, '&nbsp;')}</div>`;
+            board.innerHTML += `<div class="line fade-in" style="border-bottom-style: double;"></div>`;
+        }
+    }
+</script>
+
 </body>
 </html>
-"""
-
-with open("multiplication_lesson_details.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
